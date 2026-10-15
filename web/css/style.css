@@ -1,0 +1,125 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: #fafafa;
+    color: #222;
+}
+
+.promo-bar {
+    background-color: #ffe6f2;
+    color: #a82070;
+    text-align: center;
+    padding: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: #000;
+    color: #fff;
+}
+
+.navbar h1 {
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+}
+
+.wa-header-btn {
+    color: #25d366;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.hero {
+    text-align: center;
+    padding: 30px 20px;
+    background: #fff;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.hero h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.hero p {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    background: #f9f9f9;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.card h3 {
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+    color: #222;
+}
+
+.card .price {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #a82070;
+    margin-bottom: 10px;
+}
+
+.card button {
+    background-color: #25d366;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    transition: opacity 0.2s;
+}
+
+.card button:hover {
+    opacity: 0.9;
+}
