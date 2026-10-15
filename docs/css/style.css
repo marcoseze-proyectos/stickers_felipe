@@ -21,7 +21,7 @@ body {
     background-color: #e0f2fe;
     color: var(--primary-dark);
     text-align: center;
-    padding: 10px;
+    padding: 8px;
     font-size: 0.75rem;
     font-weight: 650;
 }
@@ -36,46 +36,78 @@ body {
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-logo {
+    height: 32px;
+    width: 32px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: #fff;
+}
+
 .navbar h1 {
     font-size: 1.2rem;
     letter-spacing: 1px;
 }
 
+/* Banner / Carrusel compacto y adaptable estilo E-commerce */
+.banner-carousel {
+    background: linear-gradient(135deg, #caf0f8, #90e0ef);
+    color: var(--primary-dark);
+    text-align: center;
+    padding: 16px;
+    border-bottom: 1px solid #bde0fe;
+}
+
+.banner-slide h3 {
+    font-size: 1rem;
+    margin-bottom: 3px;
+}
+
+.banner-slide p {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
 .hero {
     text-align: center;
-    padding: 24px 20px;
+    padding: 20px 16px;
     background: #fff;
     border-bottom: 1px solid #e2e8f0;
 }
 
 .hero h2 {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     color: #0f172a;
-    margin-bottom: 6px;
-    word-break: break-word;
+    margin-bottom: 4px;
 }
 
 .hero p {
     color: #475569;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
 .filters-container {
     display: flex;
     justify-content: center;
     gap: 6px;
-    margin: 16px 12px;
+    margin: 14px 10px;
     flex-wrap: wrap;
 }
 
 .filter-btn {
     background: #fff;
     border: 1px solid #bae6fd;
-    padding: 6px 12px;
+    padding: 5px 12px;
     border-radius: 20px;
     cursor: pointer;
     font-weight: 500;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--primary-dark);
 }
 
@@ -196,7 +228,62 @@ body {
     font-size: 0.7rem;
 }
 
-/* Modal del Carrito: Elegante, ocupa máximo 50% de la pantalla a la derecha */
+/* Footer Detallado */
+.store-footer {
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    padding: 30px 20px 20px;
+    margin-top: 40px;
+    color: #475569;
+    font-size: 0.8rem;
+}
+
+.footer-section {
+    margin-bottom: 20px;
+}
+
+.footer-section h4 {
+    color: var(--primary-dark);
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.footer-section p {
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+.footer-grid-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 15px;
+    margin-bottom: 15px;
+}
+
+.footer-grid-info h5 {
+    color: #0f172a;
+    margin-bottom: 6px;
+    font-size: 0.8rem;
+}
+
+.social-icons {
+    display: flex;
+    gap: 12px;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+.footer-copy {
+    text-align: center;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 15px;
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+/* Modal del Carrito */
 .cart-modal {
     position: fixed;
     top: 0;
@@ -223,15 +310,11 @@ body {
     flex-direction: column;
     justify-content: space-between;
     box-shadow: -5px 0 25px rgba(0,0,0,0.15);
-    border-top-left-radius: 16px;
-    border-bottom-left-radius: 16px;
 }
 
 @media (max-width: 768px) {
     .cart-content {
-        max-width: 65%; /* Deja espacio libre del lado izquierdo en celular */
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
+        max-width: 65%;
     }
 }
 
@@ -262,7 +345,6 @@ body {
     padding: 15px 0;
 }
 
-/* Estilo de lista de productos limpia y moderna */
 .cart-item {
     display: flex;
     justify-content: space-between;
@@ -300,11 +382,6 @@ body {
     justify-content: center;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.2s;
-}
-
-.remove-btn:hover {
-    background: #fecaca;
 }
 
 .cart-footer {
@@ -335,9 +412,4 @@ body {
     gap: 8px;
     font-size: 0.95rem;
     box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2);
-    transition: opacity 0.2s;
-}
-
-.wa-checkout-btn:hover {
-    opacity: 0.9;
 }
