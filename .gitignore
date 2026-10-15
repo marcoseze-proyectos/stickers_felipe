@@ -1,10 +1,2 @@
 # Archivos del sistema operativo
 .DS_Store
-.Thumbs.db
-
-# Entornos y compilados previos
-*.db
-cmd/
-internal/
-go.mod
-go.sum
