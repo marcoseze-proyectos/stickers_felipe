@@ -181,7 +181,7 @@ function sendWhatsAppOrder() {
         mensaje += `- ${item.title} (x${item.quantity}) - $${subtotal}\n`;
     });
 
-    mensaje += `\n*Total a pagar: $${total.toFixed(2)}*\n¿Cómo coordinamos el pago y el envío/retiro en CABA?`;
+    mensaje += `\n*Total a pagar: $${total.toFixed(2)}*\n¿Cómo coordinamos el pago y el retiro por el Showroom en CABA / envío?`;
 
     const encodedMessage = encodeURIComponent(mensaje);
     window.open(`https://wa.me/${telefono}?text=${encodedMessage}`, '_blank');
