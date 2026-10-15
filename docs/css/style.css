@@ -43,22 +43,21 @@ body {
 
 .hero {
     text-align: center;
-    padding: 24px 16px;
+    padding: 24px 20px;
     background: #fff;
     border-bottom: 1px solid #e2e8f0;
 }
 
 .hero h2 {
-    font-size: 1.35rem;
+    font-size: 1.3rem;
     color: #0f172a;
     margin-bottom: 6px;
-    line-height: 1.2;
+    word-break: break-word;
 }
 
 .hero p {
     color: #475569;
     font-size: 0.85rem;
-    line-height: 1.4;
 }
 
 .filters-container {
@@ -78,7 +77,6 @@ body {
     font-weight: 500;
     font-size: 0.8rem;
     color: var(--primary-dark);
-    transition: all 0.2s;
 }
 
 .filter-btn:hover, .filter-btn.active {
@@ -93,7 +91,6 @@ body {
     padding: 0 12px;
 }
 
-/* Grilla adaptable sin elementos pegados */
 .products-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -151,7 +148,6 @@ body {
     margin-bottom: 4px;
     color: #1e293b;
     text-align: left;
-    line-height: 1.2;
 }
 
 .card .price {
@@ -200,7 +196,6 @@ body {
     font-size: 0.7rem;
 }
 
-/* Modal del Carrito */
 .cart-modal {
     position: fixed;
     top: 0;
