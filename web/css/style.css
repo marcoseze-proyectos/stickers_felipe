@@ -1,3 +1,9 @@
+:root {
+    --primary-color: #00b4d8;
+    --primary-dark: #0077b6;
+    --bg-light: #f0f8ff;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,13 +12,13 @@
 }
 
 body {
-    background-color: #fafafa;
+    background-color: #f7fbff;
     color: #222;
 }
 
 .promo-bar {
-    background-color: #ffe6f2;
-    color: #a82070;
+    background-color: #caf0f8;
+    color: var(--primary-dark);
     text-align: center;
     padding: 8px;
     font-size: 0.85rem;
@@ -24,8 +30,9 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 30px;
-    background: #00b4d8; /* 👈 Color celeste */
+    background: var(--primary-color);
     color: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 
 .navbar h1 {
@@ -33,29 +40,48 @@ body {
     letter-spacing: 2px;
 }
 
-.wa-header-btn {
-    color: #25d366;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-}
-
 .hero {
     text-align: center;
-    padding: 30px 20px;
+    padding: 40px 20px;
     background: #fff;
-    border-bottom: 1px solid #eaeaea;
+    border-bottom: 1px solid #e0f2fe;
 }
 
 .hero h2 {
     font-size: 1.8rem;
-    color: #333;
+    color: #1e293b;
     margin-bottom: 5px;
 }
 
 .hero p {
-    color: #666;
+    color: #64748b;
     font-size: 0.95rem;
+}
+
+/* Filtros por Artista */
+.filters-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 25px 0 10px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: #fff;
+    border: 1px solid #bae6fd;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #0369a1;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
 }
 
 .container {
@@ -66,48 +92,67 @@ body {
 
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 20px;
 }
 
 .card {
     background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-    padding: 12px;
+    border: 1px solid #e0f2fe;
+    border-radius: 12px;
+    padding: 15px;
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(0, 180, 216, 0.1);
 }
 
 .card img {
     width: 100%;
     height: 220px;
     object-fit: cover;
-    background: #f9f9f9;
-    border-radius: 6px;
+    background: #f8fafc;
+    border-radius: 8px;
     margin-bottom: 10px;
+}
+
+.category-tag {
+    display: inline-block;
+    background: #e0f2fe;
+    color: var(--primary-dark);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    align-self: flex-start;
 }
 
 .card h3 {
     font-size: 0.95rem;
     margin-bottom: 6px;
-    color: #222;
+    color: #1e293b;
 }
 
 .card .price {
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: bold;
-    color: #a82070;
-    margin-bottom: 10px;
+    color: var(--primary-dark);
+    margin-bottom: 12px;
 }
 
 .card button {
     background-color: #25d366;
     color: white;
     border: none;
-    padding: 8px 12px;
+    padding: 9px 12px;
     border-radius: 20px;
     font-weight: 600;
     cursor: pointer;
@@ -125,10 +170,10 @@ body {
 }
 
 .cart-btn {
-    background: #a82070;
+    background: var(--primary-dark);
     color: white;
     border: none;
-    padding: 8px 15px;
+    padding: 8px 16px;
     border-radius: 20px;
     cursor: pointer;
     font-weight: 600;
@@ -139,7 +184,7 @@ body {
 
 #cart-count {
     background: white;
-    color: #a82070;
+    color: var(--primary-dark);
     border-radius: 50%;
     padding: 1px 6px;
     font-size: 0.8rem;
@@ -152,11 +197,10 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.4);
     display: flex;
     justify-content: flex-end;
     z-index: 1000;
-    transition: opacity 0.3s;
 }
 
 .cart-modal.hidden {
@@ -165,7 +209,7 @@ body {
 
 .cart-content {
     background: white;
-    width: 350px;
+    width: 360px;
     height: 100%;
     padding: 20px;
     display: flex;
@@ -177,8 +221,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 12px;
 }
 
 .cart-header button {
@@ -198,22 +242,22 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     font-size: 0.9rem;
-    border-bottom: 1px solid #f9f9f9;
+    border-bottom: 1px solid #f1f5f9;
     padding-bottom: 8px;
 }
 
 .remove-btn {
     background: none;
     border: none;
-    color: #ff4d4d;
+    color: #ef4444;
     font-size: 1.2rem;
     cursor: pointer;
 }
 
 .cart-footer {
-    border-top: 1px solid #eee;
+    border-top: 1px solid #e2e8f0;
     padding-top: 15px;
 }
 
@@ -222,6 +266,7 @@ body {
     font-weight: bold;
     margin-bottom: 15px;
     text-align: right;
+    color: #1e293b;
 }
 
 .wa-checkout-btn {
@@ -238,42 +283,4 @@ body {
     justify-content: center;
     gap: 8px;
     font-size: 1rem;
-}
-
-/* Botones de Filtros por Artista */
-.filters-container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 25px 0 10px;
-    flex-wrap: wrap;
-}
-
-.filter-btn {
-    background: #fff;
-    border: 1px solid #ddd;
-    padding: 6px 16px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
-}
-
-.filter-btn:hover, .filter-btn.active {
-    background: #a82070;
-    color: white;
-    border-color: #a82070;
-}
-
-/* Etiqueta de Categoría/Artista en la Card */
-.category-tag {
-    display: inline-block;
-    background: #ffe6f2;
-    color: #a82070;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin-bottom: 6px;
-    align-self: flex-start;
 }
