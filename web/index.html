@@ -3,37 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stickers Shop</title>
+    <title>STICKERS | Tienda Oficial</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- Barra superior simple -->
     <div class="promo-bar">
-        ✨ Envíos a todo el país • Consultas y pedidos por WhatsApp ✨
+        🚚 Envíos y retiro en CABA • Consultas y pedidos por WhatsApp 💬
     </div>
 
-    <!-- Header -->
     <header class="navbar">
         <h1>STICKERS</h1>
-        <a href="https://wa.me/54911XXXXXXXX?text=Hola!%20Quiero%20consultar%20por%20los%20stickers" target="_blank" class="wa-header-btn">
-            <i class="fa-brands fa-whatsapp"></i> Contacto
-        </a>
+        <button id="cart-btn" class="cart-btn">
+            <i class="fa-solid fa-cart-shopping"></i> Carrito <span id="cart-count">0</span>
+        </button>
     </header>
 
-    <!-- Banner -->
     <section class="hero">
-        <h2>Catálogo de Stickers</h2>
-        <p>Elegí tu sticker favorito y coordinate directo por WhatsApp.</p>
+        <h2>Ediciones Limitadas • Artistas & Cultura Urbana</h2>
+        <p>Llevate a tus artistas favoritos (Lali, Dillom, Bizarrap y más) en vinilo troquelado de alta calidad.</p>
     </section>
 
-    <!-- Grid de productos -->
+    <!-- Filtros por Artista / Categoría -->
+    <div class="filters-container">
+        <button class="filter-btn active" data-filter="all">Todos</button>
+        <button class="filter-btn" data-filter="Lali">Lali</button>
+        <button class="filter-btn" data-filter="Dillom">Dillom</button>
+        <button class="filter-btn" data-filter="Bizarrap">Bizarrap</button>
+        <button class="filter-btn" data-filter="Nicki Nicole">Nicki Nicole</button>
+    </div>
+
     <main class="container">
-        <div id="products-grid" class="products-grid">
-            <!-- Se cargan dinámicamente -->
-        </div>
+        <div id="products-grid" class="products-grid"></div>
     </main>
+
+    <!-- Modal / Panel del Carrito (Cierra haciendo click afuera) -->
+    <div id="cart-modal" class="cart-modal hidden">
+        <div class="cart-content" onclick="event.stopPropagation()">
+            <div class="cart-header">
+                <h3>Tu Carrito</h3>
+                <button id="close-cart">&times;</button>
+            </div>
+            <div id="cart-items" class="cart-items"></div>
+            <div class="cart-footer">
+                <p>Total: $<span id="cart-total">0.00</span></p>
+                <button id="checkout-whatsapp" class="wa-checkout-btn">
+                    <i class="fa-brands fa-whatsapp"></i> Finalizar pedido por WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script type="module" src="/js/app.js"></script>
 </body>
