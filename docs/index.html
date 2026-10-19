@@ -3,56 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STICKERS | Tienda Oficial</title>
+    <title>STICKERS | Ediciones limitadas</title>
+    <meta name="description" content="Stickers de vinilo troquelado de Lali, Dillom, Bizarrap, Nicki Nicole y BTS. Envíos a todo el país y retiro en CABA.">
+    <meta name="theme-color" content="#0077b6">
+    <meta property="og:title" content="STICKERS | Ediciones limitadas">
+    <meta property="og:description" content="Stickers de tus artistas favoritos en vinilo troquelado de alta calidad.">
+    <meta property="og:image" content="./uploads/logo.jpeg">
+    <link rel="icon" href="./uploads/logo.jpeg">
     <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- Barra de anuncios superior -->
     <div class="promo-bar">
-        🚚 Envíos a todo el país &nbsp;•&nbsp; 📍 Retiro en Showroom CABA 💬
+        🚚 Envíos a todo el país &nbsp;•&nbsp; 📍 Retiro en Showroom CABA
     </div>
 
-    <!-- Barra de navegación con Logo y Carrito -->
     <header class="navbar">
-        <div class="logo-container">
-            <img src="./uploads/logo.jpeg" alt="Logo STICKERS" class="brand-logo">
+        <a class="logo-container" href="./">
+            <img src="./uploads/logo.jpeg" alt="Logo STICKERS" class="brand-logo" width="36" height="36">
             <h1>STICKERS</h1>
-        </div>
-        <button id="cart-btn" class="cart-btn">
-            <i class="fa-solid fa-cart-shopping"></i> Carrito <span id="cart-count">0</span>
+        </a>
+        <button id="cart-btn" class="cart-btn" type="button" aria-label="Abrir carrito">
+            🛒 Carrito <span id="cart-count">0</span>
         </button>
     </header>
 
-    <!-- Banner de Novedades -->
     <section class="banner-carousel">
-        <div class="banner-slide">
-            <h3>✨ ¡Nuevos Stickers Exclusivos!</h3>
-            <p>Conseguí los diseños más picantes de la cultura urbana & K-Pop.</p>
-        </div>
+        <h3>✨ ¡Nuevos Stickers Exclusivos!</h3>
+        <p>Conseguí los diseños más picantes de la cultura urbana &amp; K-Pop.</p>
     </section>
 
     <section class="hero">
-        <h2>Ediciones Limitadas • Artistas & Cultura Urbana</h2>
+        <h2>Ediciones Limitadas • Artistas &amp; Cultura Urbana</h2>
         <p>Llevate a tus artistas favoritos (Lali, Dillom, Bizarrap, BTS y más) en vinilo troquelado de alta calidad.</p>
     </section>
 
-    <!-- Filtros por Artista / Categoría -->
-    <div class="filters-container">
-        <button class="filter-btn active" data-filter="all">Todos</button>
-        <button class="filter-btn" data-filter="Lali">Lali</button>
-        <button class="filter-btn" data-filter="Dillom">Dillom</button>
-        <button class="filter-btn" data-filter="Bizarrap">Bizarrap</button>
-        <button class="filter-btn" data-filter="Nicki Nicole">Nicki Nicole</button>
-        <button class="filter-btn" data-filter="BTS">BTS</button>
-    </div>
+    <!-- Los botones se generan desde app.js -->
+    <nav id="filters" class="filters-container" aria-label="Filtrar por artista"></nav>
 
     <main class="container">
-        <div id="products-grid" class="products-grid"></div>
+        <div id="products-grid" class="products-grid" aria-live="polite"></div>
     </main>
 
-    <!-- Footer Simplificado -->
     <footer class="store-footer">
         <div class="footer-section">
             <h4>INFORMACIÓN ÚTIL</h4>
@@ -60,34 +52,36 @@
             <p><strong>📍 Retiro en Showroom:</strong> Gratis en CABA (coordinando previamente por WhatsApp).</p>
             <p><strong>🚚 Envíos a todo el país:</strong> A través de Correo Argentino de forma segura.</p>
         </div>
-        
         <div class="footer-grid-info">
-            <div>
-                <h5>MEDIOS DE PAGO</h5>
-                <p>💳 Transferencia bancaria</p>
-            </div>
+            <h5>MEDIOS DE PAGO</h5>
+            <p>💳 Transferencia bancaria</p>
         </div>
         <div class="footer-copy">
             <p>© 2026 STICKERS • Todos los derechos reservados.</p>
         </div>
     </footer>
 
-    <!-- Modal / Panel del Carrito -->
-    <div id="cart-modal" class="cart-modal hidden">
-        <div class="cart-content" onclick="event.stopPropagation()">
+    <!-- Carrito -->
+    <div id="cart-modal" class="cart-modal" aria-hidden="true">
+        <aside class="cart-content" role="dialog" aria-modal="true" aria-labelledby="cart-title">
             <div class="cart-header">
-                <h3>Tu Carrito</h3>
-                <button id="close-cart">&times;</button>
+                <h3 id="cart-title">Tu carrito</h3>
+                <button id="close-cart" type="button" aria-label="Cerrar carrito">&times;</button>
             </div>
+
             <div id="cart-items" class="cart-items"></div>
+
             <div class="cart-footer">
-                <p>Total: $<span id="cart-total">0.00</span></p>
-                <button id="checkout-whatsapp" class="wa-checkout-btn">
-                    <i class="fa-brands fa-whatsapp"></i> Finalizar pedido por WhatsApp
+                <button id="clear-cart" class="link-btn" type="button" hidden>Vaciar carrito</button>
+                <p class="cart-total-row">Total: <strong id="cart-total">$0</strong></p>
+                <button id="checkout-whatsapp" class="wa-checkout-btn" type="button" disabled>
+                    💬 Finalizar pedido por WhatsApp
                 </button>
             </div>
-        </div>
+        </aside>
     </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
     <script type="module" src="./js/app.js"></script>
 </body>

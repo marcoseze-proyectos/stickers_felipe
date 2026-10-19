@@ -1,188 +1,231 @@
 import { fetchProducts } from './api.js';
+import { CONFIG } from './config.js';
+import * as Cart from './cart.js';
+import { money } from './cart.js';
 
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
-let allProducts = [];
+const $ = (sel) => document.querySelector(sel);
 
-document.addEventListener('DOMContentLoaded', async () => {
-    allProducts = await fetchProducts();
-    renderProducts(allProducts);
-    updateCartUI();
+const grid = $('#products-grid');
+const filtersBox = $('#filters');
+const modal = $('#cart-modal');
+const cartBtn = $('#cart-btn');
+const closeBtn = $('#close-cart');
+const countEl = $('#cart-count');
+const itemsBox = $('#cart-items');
+const totalEl = $('#cart-total');
+const checkoutBtn = $('#checkout-whatsapp');
+const clearBtn = $('#clear-cart');
+const toastEl = $('#toast');
 
-    // Eventos del Carrito y Cierre por fuera
-    const cartModal = document.getElementById('cart-modal');
-    document.getElementById('cart-btn').addEventListener('click', () => toggleCartModal(true));
-    document.getElementById('close-cart').addEventListener('click', () => toggleCartModal(false));
-    cartModal.addEventListener('click', () => toggleCartModal(false)); // Cierra al hacer click en el fondo oscuro
+let lastFocus = null;
+let toastTimer;
 
-    document.getElementById('checkout-whatsapp').addEventListener('click', sendWhatsAppOrder);
+/* ---------- helpers ---------- */
+function el(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+}
 
-    // Eventos de Filtros
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            const filter = e.target.getAttribute('data-filter');
-            if (filter === 'all') {
-                renderProducts(allProducts);
-            } else {
-                const filtered = allProducts.filter(p => p.category === filter);
-                renderProducts(filtered);
-            }
-        });
-    });
-});
+function iconBtn(label, text, onClick, className = '') {
+    const b = el('button', className, text);
+    b.type = 'button';
+    b.setAttribute('aria-label', label);
+    b.addEventListener('click', onClick);
+    return b;
+}
 
+function showToast(message) {
+    toastEl.textContent = message;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1800);
+}
+
+/* ---------- productos ---------- */
 function renderProducts(products) {
-    const grid = document.getElementById('products-grid');
-    grid.innerHTML = '';
-
-    if (products.length === 0) {
-        grid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">No hay stickers para esta categoría.</p>';
+    if (!products.length) {
+        grid.replaceChildren(el('p', 'empty-msg', 'No hay stickers para esta categoría.'));
         return;
     }
 
-    products.forEach(product => {
-        const card = document.createElement('div');
-        card.classList.add('card');
+    const frag = document.createDocumentFragment();
+    products.forEach((p) => {
+        const card = el('article', 'card');
 
-        card.innerHTML = `
-            <img src="${product.image}" alt="${product.title}" class="product-img">
-            <span class="category-tag">${product.category}</span>
-            <h3>${product.title}</h3>
-            <p class="price">$${product.price.toFixed(2)}</p>
-            <button class="add-btn">Agregar al carrito</button>
-        `;
+        const img = el('img', 'product-img');
+        img.src = p.image;
+        img.alt = p.title;
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.width = 400;
+        img.height = 400;
 
-        card.querySelector('.add-btn').addEventListener('click', (e) => {
-            addToCart(product, e.target);
+        const add = el('button', 'add-btn', 'Agregar al carrito');
+        add.type = 'button';
+        add.addEventListener('click', () => {
+            flyToCart(img);
+            Cart.add(p.id);
+            showToast(`✓ ${p.title}`);
         });
 
-        grid.appendChild(card);
+        card.append(
+            img,
+            el('span', 'category-tag', p.category),
+            el('h3', '', p.title),
+            el('p', 'price', money(p.price)),
+            add
+        );
+        frag.append(card);
+    });
+    grid.replaceChildren(frag);
+}
+
+function renderFilters(products) {
+    const categories = [...new Set(products.map((p) => p.category))];
+    const buttons = ['all', ...categories].map((cat, i) => {
+        const b = el('button', 'filter-btn' + (i === 0 ? ' active' : ''), cat === 'all' ? 'Todos' : cat);
+        b.type = 'button';
+        b.dataset.filter = cat;
+        b.setAttribute('aria-pressed', i === 0);
+        return b;
+    });
+    filtersBox.replaceChildren(...buttons);
+
+    filtersBox.addEventListener('click', (e) => {
+        const btn = e.target.closest('.filter-btn');
+        if (!btn) return;
+        filtersBox.querySelectorAll('.filter-btn').forEach((b) => {
+            const on = b === btn;
+            b.classList.toggle('active', on);
+            b.setAttribute('aria-pressed', on);
+        });
+        const f = btn.dataset.filter;
+        renderProducts(f === 'all' ? products : products.filter((p) => p.category === f));
     });
 }
 
-// Animación de vuelo hacia el carrito
-function animateFlyToCart(imgElement) {
-    const cartIcon = document.getElementById('cart-btn');
-    const imgRect = imgElement.getBoundingClientRect();
-    const cartRect = cartIcon.getBoundingClientRect();
+/* ---------- animación de vuelo ---------- */
+function flyToCart(img) {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const flyingImg = imgElement.cloneNode(true);
-    flyingImg.style.position = 'fixed';
-    flyingImg.style.left = `${imgRect.left}px`;
-    flyingImg.style.top = `${imgRect.top}px`;
-    flyingImg.style.width = `${imgRect.width}px`;
-    flyingImg.style.height = `${imgRect.height}px`;
-    flyingImg.style.borderRadius = '8px';
-    flyingImg.style.zIndex = '9999';
-    flyingImg.style.transition = 'all 0.8s cubic-bezier(0.2, 1, 0.3, 1)';
-    flyingImg.style.pointerEvents = 'none';
+    const a = img.getBoundingClientRect();
+    const b = cartBtn.getBoundingClientRect();
+    const fly = img.cloneNode();
+    fly.removeAttribute('loading');
+    fly.className = 'fly-img';
+    Object.assign(fly.style, {
+        left: `${a.left}px`, top: `${a.top}px`,
+        width: `${a.width}px`, height: `${a.height}px`
+    });
+    document.body.append(fly);
 
-    document.body.appendChild(flyingImg);
-
-    setTimeout(() => {
-        flyingImg.style.left = `${cartRect.left + cartRect.width / 2}px`;
-        flyingImg.style.top = `${cartRect.top}px`;
-        flyingImg.style.width = '20px';
-        flyingImg.style.height = '20px';
-        flyingImg.style.opacity = '0.5';
-    }, 10);
-
-    setTimeout(() => {
-        flyingImg.remove();
-    }, 800);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        Object.assign(fly.style, {
+            left: `${b.left + b.width / 2 - 10}px`, top: `${b.top}px`,
+            width: '20px', height: '20px', opacity: '0.4'
+        });
+    }));
+    setTimeout(() => fly.remove(), 800);
 }
 
-function addToCart(product, buttonElement) {
-    const card = buttonElement.closest('.card');
-    const img = card.querySelector('.product-img');
-    animateFlyToCart(img);
+/* ---------- carrito ---------- */
+let prevCount = 0;
 
-    const existing = cart.find(item => item.id === product.id);
-    if (existing) {
-        existing.quantity += 1;
-    } else {
-        cart.push({ ...product, quantity: 1 });
+function renderCart() {
+    const lines = Cart.getLines();
+    const count = Cart.count();
+
+    countEl.textContent = count;
+    if (count > prevCount) {
+        countEl.classList.remove('bump');
+        void countEl.offsetWidth; // reinicia la animación
+        countEl.classList.add('bump');
     }
-    saveAndUdpate();
-}
+    prevCount = count;
 
-function removeFromCart(productId) {
-    cart = cart.filter(item => item.id !== productId);
-    saveAndUdpate();
-}
+    totalEl.textContent = money(Cart.total());
+    checkoutBtn.disabled = lines.length === 0;
+    clearBtn.hidden = lines.length === 0;
 
-function saveAndUdpate() {
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartUI();
-}
-
-function updateCartUI() {
-    const cartCount = document.getElementById('cart-count');
-    const cartItemsContainer = document.getElementById('cart-items');
-    const cartTotal = document.getElementById('cart-total');
-
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    cartCount.textContent = totalItems;
-
-    cartItemsContainer.innerHTML = '';
-    if (cart.length === 0) {
-        cartItemsContainer.innerHTML = '<p class="empty-cart" style="text-align:center; color:#888; margin-top:20px;">El carrito está vacío.</p>';
-        cartTotal.textContent = '0.00';
+    if (!lines.length) {
+        itemsBox.replaceChildren(el('p', 'empty-cart', 'El carrito está vacío.'));
         return;
     }
 
-    let total = 0;
-    cart.forEach(item => {
-        const subtotal = item.price * item.quantity;
-        total += subtotal;
+    itemsBox.replaceChildren(...lines.map(({ product: p, qty }) => {
+        const row = el('div', 'cart-item');
 
-        const itemDiv = document.createElement('div');
-        itemDiv.classList.add('cart-item');
-        itemDiv.innerHTML = `
-            <span>${item.title} (x${item.quantity})</span>
-            <span>$${subtotal.toFixed(2)}</span>
-            <button class="remove-btn" data-id="${item.id}">&times;</button>
-        `;
+        const thumb = el('img', 'cart-thumb');
+        thumb.src = p.image;
+        thumb.alt = '';
 
-        itemDiv.querySelector('.remove-btn').addEventListener('click', () => {
-            removeFromCart(item.id);
-        });
+        const info = el('div', 'cart-info');
+        info.append(el('span', 'cart-title', p.title), el('span', 'cart-unit', money(p.price)));
 
-        cartItemsContainer.appendChild(itemDiv);
-    });
+        const qtyBox = el('div', 'qty');
+        qtyBox.append(
+            iconBtn(`Quitar uno de ${p.title}`, '−', () => Cart.change(p.id, -1)),
+            el('span', '', String(qty)),
+            iconBtn(`Agregar uno de ${p.title}`, '+', () => Cart.change(p.id, 1))
+        );
 
-    cartTotal.textContent = total.toFixed(2);
+        const sub = el('span', 'cart-sub', money(p.price * qty));
+        const rm = iconBtn(`Eliminar ${p.title}`, '×', () => Cart.remove(p.id), 'remove-btn');
+
+        row.append(thumb, info, rm, qtyBox, sub);
+        return row;
+    }));
 }
 
-function toggleCartModal(forceState) {
-    const modal = document.getElementById('cart-modal');
-    if (typeof forceState === 'boolean') {
-        if (forceState) modal.classList.remove('hidden');
-        else modal.classList.add('hidden');
+function toggleCart(open) {
+    modal.classList.toggle('open', open);
+    modal.setAttribute('aria-hidden', String(!open));
+    document.body.classList.toggle('no-scroll', open);
+    if (open) {
+        lastFocus = document.activeElement;
+        closeBtn.focus();
     } else {
-        modal.classList.toggle('hidden');
+        lastFocus?.focus();
     }
 }
 
 function sendWhatsAppOrder() {
-    if (cart.length === 0) {
-        alert('Tu carrito está vacío.');
-        return;
-    }
+    const lines = Cart.getLines();
+    if (!lines.length) return;
 
-    const telefono = "5491150247722";
-    let mensaje = "Hola! Quiero encargar los siguientes stickers:\n\n";
-    
-    let total = 0;
-    cart.forEach(item => {
-        const subtotal = item.price * item.quantity;
-        total += subtotal;
-        mensaje += `- ${item.title} (x${item.quantity}) - $${subtotal}\n`;
-    });
+    const detail = lines
+        .map(({ product: p, qty }) => `• ${p.title} x${qty} — ${money(p.price * qty)}`)
+        .join('\n');
 
-    mensaje += `\n*Total a pagar: $${total.toFixed(2)}*\n¿Cómo coordinamos el pago y el retiro por el Showroom en CABA / envío?`;
+    const msg =
+        `Hola! Quiero encargar los siguientes stickers:\n\n${detail}\n\n` +
+        `*Total: ${money(Cart.total())}*\n` +
+        `¿Cómo coordinamos el pago y el retiro por el Showroom en CABA / envío?`;
 
-    const encodedMessage = encodeURIComponent(mensaje);
-    window.open(`https://wa.me/${telefono}?text=${encodedMessage}`, '_blank');
+    window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+}
+
+/* ---------- init ---------- */
+cartBtn.addEventListener('click', () => toggleCart(true));
+closeBtn.addEventListener('click', () => toggleCart(false));
+modal.addEventListener('click', (e) => { if (e.target === modal) toggleCart(false); });
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('open')) toggleCart(false);
+});
+checkoutBtn.addEventListener('click', sendWhatsAppOrder);
+clearBtn.addEventListener('click', () => {
+    if (confirm('¿Vaciar el carrito?')) Cart.clear();
+});
+
+try {
+    const products = await fetchProducts();
+    Cart.initCart(products);
+    Cart.subscribe(renderCart);
+    renderFilters(products);
+    renderProducts(products);
+} catch (err) {
+    console.error(err);
+    grid.replaceChildren(el('p', 'empty-msg', 'No pudimos cargar los stickers. Probá recargar la página.'));
 }
