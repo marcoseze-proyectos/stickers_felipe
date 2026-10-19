@@ -41,6 +41,15 @@
     <!-- Los botones se generan desde app.js -->
     <nav id="filters" class="filters-container" aria-label="Filtrar por artista"></nav>
 
+    <div class="toolbar">
+        <input id="search" type="search" placeholder="Buscar stickers…" aria-label="Buscar stickers" autocomplete="off">
+        <select id="sort" aria-label="Ordenar por">
+            <option value="default">Ordenar: Destacados</option>
+            <option value="asc">Menor precio</option>
+            <option value="desc">Mayor precio</option>
+        </select>
+    </div>
+
     <main class="container">
         <div id="products-grid" class="products-grid" aria-live="polite"></div>
     </main>

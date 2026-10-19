@@ -7,6 +7,8 @@ const $ = (sel) => document.querySelector(sel);
 
 const grid = $('#products-grid');
 const filtersBox = $('#filters');
+const searchInput = $('#search');
+const sortSelect = $('#sort');
 const modal = $('#cart-modal');
 const cartBtn = $('#cart-btn');
 const closeBtn = $('#close-cart');
@@ -43,10 +45,40 @@ function showToast(message) {
     toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1800);
 }
 
+// "Dillóm" y "dillom" tienen que matchear igual
+const normalize = (s) =>
+    s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+
+/* ---------- estado de la tienda ---------- */
+const state = { category: 'all', query: '', sort: 'default' };
+let allProducts = [];
+
+function getVisibleProducts() {
+    const q = normalize(state.query);
+
+    let list = allProducts.filter((p) => {
+        const inCategory = state.category === 'all' || p.category === state.category;
+        const inSearch = !q || normalize(`${p.title} ${p.category}`).includes(q);
+        return inCategory && inSearch;
+    });
+
+    if (state.sort === 'asc') list = [...list].sort((a, b) => a.price - b.price);
+    if (state.sort === 'desc') list = [...list].sort((a, b) => b.price - a.price);
+
+    return list;
+}
+
+function refresh() {
+    renderProducts(getVisibleProducts());
+}
+
 /* ---------- productos ---------- */
 function renderProducts(products) {
     if (!products.length) {
-        grid.replaceChildren(el('p', 'empty-msg', 'No hay stickers para esta categoría.'));
+        const msg = state.query
+            ? `No encontramos stickers para “${state.query}”.`
+            : 'No hay stickers para esta categoría.';
+        grid.replaceChildren(el('p', 'empty-msg', msg));
         return;
     }
 
@@ -59,8 +91,6 @@ function renderProducts(products) {
         img.alt = p.title;
         img.loading = 'lazy';
         img.decoding = 'async';
-        img.width = 400;
-        img.height = 400;
 
         const add = el('button', 'add-btn', 'Agregar al carrito');
         add.type = 'button';
@@ -101,8 +131,8 @@ function renderFilters(products) {
             b.classList.toggle('active', on);
             b.setAttribute('aria-pressed', on);
         });
-        const f = btn.dataset.filter;
-        renderProducts(f === 'all' ? products : products.filter((p) => p.category === f));
+        state.category = btn.dataset.filter;
+        refresh();
     });
 }
 
@@ -219,12 +249,21 @@ clearBtn.addEventListener('click', () => {
     if (confirm('¿Vaciar el carrito?')) Cart.clear();
 });
 
+searchInput.addEventListener('input', () => {
+    state.query = searchInput.value;
+    refresh();
+});
+sortSelect.addEventListener('change', () => {
+    state.sort = sortSelect.value;
+    refresh();
+});
+
 try {
-    const products = await fetchProducts();
-    Cart.initCart(products);
+    allProducts = await fetchProducts();
+    Cart.initCart(allProducts);
     Cart.subscribe(renderCart);
-    renderFilters(products);
-    renderProducts(products);
+    renderFilters(allProducts);
+    refresh();
 } catch (err) {
     console.error(err);
     grid.replaceChildren(el('p', 'empty-msg', 'No pudimos cargar los stickers. Probá recargar la página.'));
