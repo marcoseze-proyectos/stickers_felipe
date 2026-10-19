@@ -45,9 +45,10 @@ body {
 .brand-logo {
     height: 32px;
     width: 32px;
-    object-fit: contain;
+    object-fit: cover;
     border-radius: 50%;
     background: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .navbar h1 {
@@ -55,22 +56,21 @@ body {
     letter-spacing: 1px;
 }
 
-/* Banner / Carrusel compacto y adaptable estilo E-commerce */
 .banner-carousel {
     background: linear-gradient(135deg, #caf0f8, #90e0ef);
     color: var(--primary-dark);
     text-align: center;
-    padding: 16px;
+    padding: 14px;
     border-bottom: 1px solid #bde0fe;
 }
 
 .banner-slide h3 {
-    font-size: 1rem;
+    font-size: 0.95rem;
     margin-bottom: 3px;
 }
 
 .banner-slide p {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     opacity: 0.9;
 }
 
@@ -96,25 +96,27 @@ body {
     display: flex;
     justify-content: center;
     gap: 6px;
-    margin: 14px 10px;
+    margin: 16px 10px;
     flex-wrap: wrap;
 }
 
 .filter-btn {
     background: #fff;
     border: 1px solid #bae6fd;
-    padding: 5px 12px;
+    padding: 6px 14px;
     border-radius: 20px;
     cursor: pointer;
     font-weight: 500;
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     color: var(--primary-dark);
+    transition: all 0.2s ease;
 }
 
 .filter-btn:hover, .filter-btn.active {
     background: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
+    box-shadow: 0 2px 6px rgba(0, 119, 182, 0.25);
 }
 
 .container {
@@ -126,7 +128,7 @@ body {
 .products-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 12px;
 }
 
 @media (min-width: 768px) {
@@ -140,17 +142,23 @@ body {
     background: #fff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
-    padding: 10px;
+    padding: 12px;
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
 }
 
 .card img {
     width: 100%;
-    height: 130px;
+    height: 140px;
     object-fit: cover;
     background: #f1f5f9;
     border-radius: 8px;
@@ -171,22 +179,23 @@ body {
     font-weight: 600;
     padding: 2px 8px;
     border-radius: 6px;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     align-self: flex-start;
 }
 
 .card h3 {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     margin-bottom: 4px;
     color: #1e293b;
     text-align: left;
+    line-height: 1.3;
 }
 
 .card .price {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     font-weight: bold;
     color: var(--primary-dark);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     text-align: left;
 }
 
@@ -194,16 +203,21 @@ body {
     background-color: var(--accent-green);
     color: white;
     border: none;
-    padding: 8px 6px;
+    padding: 9px 8px;
     border-radius: 20px;
     font-weight: 600;
     cursor: pointer;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
     width: 100%;
+    transition: background-color 0.2s ease;
+}
+
+.card button:hover {
+    background-color: #1ebd56;
 }
 
 .cart-btn {
@@ -228,7 +242,6 @@ body {
     font-size: 0.7rem;
 }
 
-/* Footer Detallado */
 .store-footer {
     background: #ffffff;
     border-top: 1px solid #e2e8f0;
@@ -254,9 +267,6 @@ body {
 }
 
 .footer-grid-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
     border-top: 1px solid #f1f5f9;
     padding-top: 15px;
     margin-bottom: 15px;
@@ -268,13 +278,6 @@ body {
     font-size: 0.8rem;
 }
 
-.social-icons {
-    display: flex;
-    gap: 12px;
-    font-size: 1.2rem;
-    color: var(--primary-color);
-}
-
 .footer-copy {
     text-align: center;
     border-top: 1px solid #f1f5f9;
@@ -283,7 +286,6 @@ body {
     color: #94a3b8;
 }
 
-/* Modal del Carrito */
 .cart-modal {
     position: fixed;
     top: 0;
